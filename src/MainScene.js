@@ -33,14 +33,19 @@ export default class MainScene extends React.Component {
       .then((data) => {
         console.log(data);
         this.setState(data);
-      })
+      }).then(() => {
+      this.setState({
+        isLoaded: true
+      });
+    })
 
-
+    /*
       delay(2000).then(() => {
         this.setState({
           isLoaded: true
         });
       })
+    */
 
   }
 
