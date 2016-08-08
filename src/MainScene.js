@@ -44,19 +44,14 @@ export default class MainScene extends React.Component {
 
   }
 
-  randomTemp() {
-    return Math.floor(Math.random() * 30) + 20
-  }
-
   refresh() {
     this.setState({
       isLoaded: false
     });
-    console.log('time: ' + this.state.lastFetch);
     if (moment() - this.state.lastFetch > 10000) { // 10 sec
       this.componentDidMount();
     } else {
-      console.log('nije proslo dovoljno vremena');
+      console.log('not enough time passed');
       this.setState({
         isLoaded: true,
         poruka: 'Pokušajte kasnije'
@@ -124,21 +119,12 @@ function delay(ms) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //backgroundColor: 'rgba(0,0,0,.3)'
     backgroundColor: '#66A6CC'
-    //justifyContent: 'center',
-    //alignItems: 'center',
-    //width: null,
-    //height: null,
   },
   header: {
-    //flexDirection: 'row'
-    //flex: 0.5,
   },
   image: {
-    //flex: 0.5,
     alignSelf: 'flex-end',
-    //opacity: 0.7,
   },
   title: {
     flex: 1,
@@ -147,21 +133,17 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     margin: 10,
-    //top: -80,
-    //backgroundColor: 'rgba(0,0,0,.3)',
   },
 
   content: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    //backgroundColor: 'rgba(1,1,1,0.9)'
   },
   text: {
     fontSize: 16,
     textAlign: 'center',
     color: 'white',
-    //backgroundColor: 'rgba(125,125,125,.4)',
     margin: 2,
     textAlignVertical: 'center'
   },
@@ -181,17 +163,10 @@ const styles = StyleSheet.create({
     height: 32,
     width: 96,
     alignSelf: 'center',
-    //borderColor: '#93CDF5',
-    //borderWidth: 2,
-    //backgroundColor: '#777777',
     margin: 15,
-    //justifyContent: 'center',
-    //alignItems: 'center'
   },
   imageRefresh: {
-    //margin: 20,
     alignSelf: 'center',
     height: 32,
-    //width: 24
   }
 });
