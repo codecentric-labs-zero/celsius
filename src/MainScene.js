@@ -24,32 +24,21 @@ export default class MainScene extends React.Component {
       temperatura: '',
       poruka: null
     }
-    // this.getTemperature();
   }
 
   componentDidMount() {
-
+    console.log('componentDidMount')
+    const that = this;
     getTemperature(banjaluka)
       .then((data) => {
+        console.log('Data in MainScene')
         console.log(data);
-        this.setState(data);
-      }).then(() => {
-      this.setState({
-        isLoaded: true
-      });
-    })
-
-    /*
-      delay(2000).then(() => {
-        this.setState({
-          isLoaded: true
-        });
+        that.setState({...data, isLoaded: true});
       })
-    */
-
   }
 
   refresh() {
+    console.log('refresh called')
     this.setState({
       isLoaded: false
     });
@@ -72,6 +61,8 @@ export default class MainScene extends React.Component {
   }
 
   renderBody() {
+    console.log('Rendering body for ' + this.state.isLoaded)
+    console.log(this.state)
     if (this.state.isLoaded) {
       return (
         <View>
