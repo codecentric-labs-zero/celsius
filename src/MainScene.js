@@ -108,10 +108,6 @@ export default class MainScene extends React.Component {
   }
 }
 
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

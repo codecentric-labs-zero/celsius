@@ -14,9 +14,7 @@ export function getTemperature(cityId) {
     return {
       lastFetch: moment(),
       termin: responseData.termin,
-      temperatura: responseData.temperatura,
-      isLoaded: true,
-      poruka: null
+      temperatura: responseData.temperatura
     }
   })
 }
