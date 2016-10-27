@@ -31,10 +31,16 @@ export default class MainScene extends React.Component {
     const that = this;
     getTemperature(banjaluka)
       .then((data) => {
-        console.log('Data in MainScene')
-        console.log(data);
         that.setState({...data, isLoaded: true});
-      })
+      }).catch((err)=> {
+        that.setState({
+          isLoaded: true,
+          lastFetch: moment(),
+          termin: '',
+          temperatura: '',
+          poruka: 'Greška'
+        })
+    })
   }
 
   refresh() {
