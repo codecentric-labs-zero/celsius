@@ -1,20 +1,13 @@
 import React, { Component } from 'react';
-import {
-  Text,
-  TouchableHighlight,
-  Image,
-  View,
-  StyleSheet,
-  ActivityIndicator
-} from 'react-native';
-
-var moment = require('moment');
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import moment from 'moment';
+import { getTemperature } from './api';
 require('moment/locale/sr');
 
-import { getTemperature } from './api';
 const banjaluka = 14542;
+const WAITING_TIME = 10000;
 
-export default class MainScene extends React.Component {
+export default class MainScene extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,36 +15,33 @@ export default class MainScene extends React.Component {
       lastFetch: moment(),
       termin: '',
       temperatura: '',
-      poruka: null
-    }
+      poruka: null,
+      slika: null
+    };
   }
 
   componentDidMount() {
-    console.log('componentDidMount')
     const that = this;
     getTemperature(banjaluka)
       .then((data) => {
-        that.setState({...data, isLoaded: true});
-      }).catch((err)=> {
-        that.setState({
-          isLoaded: true,
-          lastFetch: moment(),
-          termin: '',
-          temperatura: '',
-          poruka: 'Greška'
-        })
-    })
+        that.setState({ ...data, isLoaded: true, poruka: null });
+      }).catch((err) => {
+      that.setState({
+        isLoaded: true,
+        lastFetch: moment(),
+        termin: '',
+        temperatura: '',
+        poruka: 'Greška',
+        slika: null
+      });
+    });
   }
 
   refresh() {
-    console.log('refresh called')
-    this.setState({
-      isLoaded: false
-    });
-    if (moment() - this.state.lastFetch > 10000) { // 10 sec
+    this.setState({ isLoaded: false });
+    if (moment() - this.state.lastFetch > WAITING_TIME) { // 10 sec
       this.componentDidMount();
     } else {
-      console.log('not enough time passed');
       this.setState({
         isLoaded: true,
         poruka: 'Pokušajte kasnije'
@@ -62,13 +52,11 @@ export default class MainScene extends React.Component {
   calculateAgo(time) {
     // 19.07.2016 10:00
     moment.locale('sr');
-    var measureTime = moment(time, "DD.MM.YYYY HH:mm");
+    const measureTime = moment(time, 'DD.MM.YYYY HH:mm');
     return moment(measureTime).fromNow(true);
   }
 
   renderBody() {
-    console.log('Rendering body for ' + this.state.isLoaded)
-    console.log(this.state)
     if (this.state.isLoaded) {
       return (
         <View>
@@ -87,12 +75,18 @@ export default class MainScene extends React.Component {
           <Text style={[styles.text, styles.ago]}>
             {this.state.poruka ? this.state.poruka : ''}
           </Text>
+          {this.state.slika && <View>
+            <Image resizeMode="contain"
+                   style={{ height: 120 }}
+                   source={{ uri: `http://rhmzrs.com/assets/components/met_Prognoza/${this.state.slika}` }}
+            />
+          </View>}
         </View>
-      )
+      );
     } else {
       return (
         <ActivityIndicator size="large" />
-      )
+      );
     }
   }
 
@@ -100,8 +94,7 @@ export default class MainScene extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Image source={require('../assets/vlada_rs.png')} style={styles.image}>
-          </Image>
+          <Image source={require('../assets/vlada_rs.png')} style={styles.image} />
           <Text style={styles.title}>
             Republički hidrometeorološki zavod Republike Srpske
           </Text>
@@ -110,7 +103,7 @@ export default class MainScene extends React.Component {
           { this.renderBody() }
         </View>
       </View>
-    )
+    );
   }
 }
 
@@ -119,8 +112,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#66A6CC'
   },
-  header: {
-  },
+  header: {},
   image: {
     alignSelf: 'flex-end',
   },
