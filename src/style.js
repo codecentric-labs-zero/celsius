@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#66A6CC'
+    backgroundColor: '#66A6CC',
   },
   header: {},
   image: {
@@ -28,19 +28,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
     margin: 2,
-    textAlignVertical: 'center'
+    textAlignVertical: 'center',
   },
   temp: {
     fontSize: 45,
-    fontWeight: '600'
-    //height: 40,
+    fontWeight: '600',
   },
   ago: {
     color: '#FFFFFF',
     opacity: 0.7,
     fontSize: 13,
     height: 20,
-    //lineHeight: 15
   },
   buttonRefresh: {
     height: 32,
@@ -51,7 +49,7 @@ const styles = StyleSheet.create({
   imageRefresh: {
     alignSelf: 'center',
     height: 32,
-  }
+  },
 });
 
 export default styles;

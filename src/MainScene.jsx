@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { ActivityIndicator, Image, Text, TouchableHighlight, View } from 'react-native';
-import styles from './style';
 import moment from 'moment';
-import { getTemperature } from './api';
+import styles from './style';
+import getTemperature from './api';
+
 require('moment/locale/sr');
 
 const banjaluka = 14542;
@@ -17,7 +18,7 @@ export default class MainScene extends Component {
       termin: '',
       temperatura: '',
       poruka: null,
-      slika: null
+      slika: null,
     };
   }
 
@@ -26,16 +27,18 @@ export default class MainScene extends Component {
     getTemperature(banjaluka)
       .then((data) => {
         that.setState({ ...data, isLoaded: true, poruka: null });
-      }).catch((err) => {
-      that.setState({
-        isLoaded: true,
-        lastFetch: moment(),
-        termin: '',
-        temperatura: '',
-        poruka: 'Greška',
-        slika: null
+      })
+      .catch((err) => {
+        console.error(err);
+        that.setState({
+          isLoaded: true,
+          lastFetch: moment(),
+          termin: '',
+          temperatura: '',
+          poruka: 'Greška',
+          slika: null,
+        });
       });
-    });
   }
 
   refresh() {
@@ -45,7 +48,7 @@ export default class MainScene extends Component {
     } else {
       this.setState({
         isLoaded: true,
-        poruka: 'Pokušajte kasnije'
+        poruka: 'Pokušajte kasnije',
       });
     }
   }
