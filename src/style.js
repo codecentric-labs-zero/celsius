@@ -17,11 +17,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 10,
   },
-
   content: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  contentBody: {
+    flex: 1,
+    justifyContent: 'center',
   },
   text: {
     fontSize: 16,
@@ -49,6 +52,30 @@ const styles = StyleSheet.create({
   imageRefresh: {
     alignSelf: 'center',
     height: 32,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    paddingTop: 10,
+    paddingBottom: 10,
+    height: 64,
+  },
+  modalTitle: {
+    fontSize: 30,
+    marginLeft: 15,
+    flex: 1,
+  },
+  modalCloseBtn: {
+    width: 80,
+  },
+  modalCloseLabel: {
+    textAlign: 'center',
+    padding: 12,
+  },
+  modalBtn: {
+    padding: 10,
+  },
+  recordContainer: {
+    margin: 15,
   },
 });
 

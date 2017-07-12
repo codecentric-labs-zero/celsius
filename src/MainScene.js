@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, Image, Text, TouchableHighlight, View } from 'react-native';
+import { ActivityIndicator, Image, Modal, ScrollView, Text, TouchableHighlight, View } from 'react-native';
+import Realm, { HistorySchemaDAO } from './db';
 import moment from 'moment';
 import styles from './style';
 import getTemperature from './api';
@@ -8,17 +9,22 @@ require('moment/locale/sr');
 
 const banjaluka = 14542;
 const WAITING_TIME = 10000;
+let cities = [];
+cities[14542] = 'Banja Luka';
+cities[14545] = 'Mrkonjić Grad';
 
 export default class MainScene extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoaded: false,
+      modalVisible: false,
       lastFetch: moment(),
       termin: '',
       temperatura: '',
       poruka: null,
       slika: null,
+      history: [],
     };
   }
 
@@ -27,6 +33,14 @@ export default class MainScene extends Component {
     getTemperature(banjaluka)
       .then((data) => {
         that.setState({ ...data, isLoaded: true, poruka: null });
+        const record = {
+          cityId: banjaluka,
+          temperature: data.temperatura,
+          time: data.termin,
+        };
+        HistorySchemaDAO.addHistoryRecord(Realm, record);
+        const history = HistorySchemaDAO.getHistoryRecords(Realm);
+        this.setState({ history });
       })
       .catch((err) => {
         console.error(err);
@@ -39,6 +53,10 @@ export default class MainScene extends Component {
           slika: null,
         });
       });
+  }
+
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
   }
 
   refresh() {
@@ -63,7 +81,7 @@ export default class MainScene extends Component {
   renderBody() {
     if (this.state.isLoaded) {
       return (
-        <View>
+        <View style={styles.contentBody}>
           <Text style={styles.text}>
             Banja Luka
           </Text>
@@ -85,11 +103,12 @@ export default class MainScene extends Component {
                    source={{ uri: `http://rhmzrs.com/assets/components/met_Prognoza/${this.state.slika}` }}
             />
           </View>}
-        </View>
-      );
+        </View>)
     } else {
       return (
-        <ActivityIndicator size="large" />
+        <View style={styles.contentBody}>
+          <ActivityIndicator size="large" />
+        </View>
       );
     }
   }
@@ -105,6 +124,35 @@ export default class MainScene extends Component {
         </View>
         <View style={styles.content}>
           { this.renderBody() }
+          <View style={{ alignSelf: 'flex-end' }}>
+            <TouchableHighlight onPress={() => { this.setModalVisible(true); }}>
+              <Text style={styles.modalBtn}>Show History</Text>
+            </TouchableHighlight>
+          </View>
+        </View>
+        <View>
+          <Modal
+            animationType={'slide'}
+            transparent={false}
+            visible={this.state.modalVisible}
+            onRequestClose={() => {alert('Modal has been closed.');}}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>History</Text>
+              <TouchableHighlight style={styles.modalCloseBtn}
+                                  onPress={() => { this.setModalVisible(!this.state.modalVisible); }}>
+                <Text style={styles.modalCloseLabel}>Close</Text>
+              </TouchableHighlight>
+            </View>
+            <ScrollView>
+              <View>
+                {this.state.history.map(record => (
+                  <View key={record.id} style={styles.recordContainer}>
+                    <Text>{record.time}</Text>
+                    <Text>{cities[record.cityId]}: {record.temperature} ºC</Text>
+                  </View>))}
+              </View>
+            </ScrollView>
+          </Modal>
         </View>
       </View>
     );
